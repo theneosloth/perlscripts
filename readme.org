@@ -1,0 +1,7 @@
+This is a collection of random potentially useful perl scripts I wrote
+
+* Discord
+** discord.pl
+Posts a message to a given webhook
+** Scraper.pl
+Creates a webhook discord message whenever a given subreddit has a new post
