@@ -26,7 +26,7 @@ open my $fc, "<", $filename or die "Date file not found.";
 my $last_checked = <$fc>;
 
 
-my $subreddit = "pics";
+my $subreddit = "competitiveedh";
 my $url = "https://www.reddit.com/r/$subreddit/new/.json";
 
 my $json_request = HTTP::Tiny->new->get($url);
@@ -36,7 +36,7 @@ my $json = $json_request->{content};
 my $json_text = JSON->new->allow_nonref->utf8->relaxed->decode($json) or die "Could not decode the JSON.";
 
 my $posts = $json_text->{data}->{children};
-foreach my $post (@{$posts}) {
+foreach my $post (reverse @{$posts}) {
     $post = $post -> {data};
     my $date = $post -> {created_utc};
     if ($date > $last_checked){
