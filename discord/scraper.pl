@@ -11,9 +11,8 @@ use JSON qw( decode_json );
 
 my $filename = "lastchecked";
 
-
-my $webhook_id = $ENV{DISCORD_WEBHOOK_ID} or $ARGV[0] or die "Error: No webhook id set.";
-my $webhook_token = $ENV{DISCORD_WEBHOOK_TOKEN} or $ARGV[1] or die "Error: No webhook token set.";
+my $webhook_id = $ENV{DISCORD_WEBHOOK_ID} // $ARGV[0] // die "Error: No webhook id set.";
+my $webhook_token = $ENV{DISCORD_WEBHOOK_TOKEN} // $ARGV[1] // die "Error: No webhook token set.";
 my $webhook_url = "https://discordapp.com/api/webhooks/$webhook_id/$webhook_token";
 
 unless (-e $filename){
@@ -25,7 +24,6 @@ unless (-e $filename){
 open my $fc, "<", $filename or die "Date file not found.";
 my $last_checked = <$fc>;
 
-
 my $subreddit = "competitiveedh";
 my $url = "https://www.reddit.com/r/$subreddit/new/.json";
 
@@ -36,13 +34,25 @@ my $json = $json_request->{content};
 my $json_text = JSON->new->allow_nonref->utf8->relaxed->decode($json) or die "Could not decode the JSON.";
 
 my $posts = $json_text->{data}->{children};
-foreach my $post (reverse @{$posts}) {
+
+foreach my $post (reverse @$posts) {
     $post = $post -> {data};
     my $date = $post -> {created_utc};
+
+    die "Improper date provided" unless $date =~/\d+/;
+
     if ($date > $last_checked){
         my $title = $post -> {title};
         my $author = $post -> {author};
         my $url = $post -> {url};
+
+
+        # Replace double quotes
+        $title =~ s/"/'/g;
+        $author =~ s/"/'/g;
+
+        $title =~ s/[^[:ascii:]]//g;
+        $author =~ s/[^[:ascii:]]//g;
 
         say "$title is new. Posting a message";
 
