@@ -11,9 +11,13 @@ use JSON qw( decode_json );
 
 my $filename = "lastchecked";
 
-my $webhook_id = $ENV{DISCORD_WEBHOOK_ID} // $ARGV[0] // die "Error: No webhook id set.";
-my $webhook_token = $ENV{DISCORD_WEBHOOK_TOKEN} // $ARGV[1] // die "Error: No webhook token set.";
+
+
+my $subreddit = $ENV{SCRAPER_SUBREDDIT} // $ARGV[0] // die "Error: No subreddit provided.";
+my $webhook_id = $ENV{DISCORD_WEBHOOK_ID} // $ARGV[1] // die "Error: No webhook id set.";
+my $webhook_token = $ENV{DISCORD_WEBHOOK_TOKEN} // $ARGV[2] // die "Error: No webhook token set.";
 my $webhook_url = "https://discordapp.com/api/webhooks/$webhook_id/$webhook_token";
+
 
 unless (-e $filename){
     open my $fc, ">", $filename or die "Cannot write the date file.";
@@ -24,7 +28,6 @@ unless (-e $filename){
 open my $fc, "<", $filename or die "Date file not found.";
 my $last_checked = <$fc>;
 
-my $subreddit = "competitiveedh";
 my $url = "https://www.reddit.com/r/$subreddit/new/.json";
 
 my $json_request = HTTP::Tiny->new->get($url);

@@ -5,3 +5,8 @@ This is a collection of random potentially useful perl scripts I wrote
 Posts a message to a given webhook
 ** Scraper.pl
 Creates a webhook discord message whenever a given subreddit has a new post
+
+*** Docker
+#+BEGIN_SRC bash
+docker run --name=discord-scraper -v scraper-data:/scraper -e DISCORD_WEBHOOK_ID='WEBHOOK_ID' -e DISCORD_WEBHOOK_TOKEN='WEBHOOK_TOKEN' scraper
+#+END_SRC

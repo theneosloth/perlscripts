@@ -6,10 +6,10 @@ RUN cpanm JSON
 
 RUN cpanm IO::Socket::SSL
 
-RUN cpanm Net::SSLeay
-
 WORKDIR /scraper
 
 COPY scraper.pl ./scraper.pl
+
+VOLUME /scraper
 
 ENTRYPOINT ["perl", "./scraper.pl"]
